@@ -1,4 +1,4 @@
-backend/movie_data.db
+*.db
 # Logs
 logs
 *.log
