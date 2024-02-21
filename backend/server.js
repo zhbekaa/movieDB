@@ -11,4 +11,4 @@ app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
 
-// run "node server" in terminal
+// run "npm run dev" in terminal
