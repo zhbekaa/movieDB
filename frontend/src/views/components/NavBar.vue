@@ -9,7 +9,8 @@ export default {
             input: "",
             movies: [],
             showMovies: false,
-            loading: false
+            loading: false,
+            searchType: "All"
         }
     },
     methods: {
@@ -62,14 +63,16 @@ export default {
                     <input class="form-control" name="input" placeholder="Search other users..." aria-label="Search"
                         v-model="input" @input="handleInputDebounced()" @focusin="showMovies = true" @focusout="showMovies = false">
                     <div class="dropdown">
-                        <button class="input-group-text" type="button" id="triggerId" data-bs-toggle="dropdown"
+                        <button class="input-group-text gap-2" type="button" id="triggerId" data-bs-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
+                            {{ searchType }}
                             <span class="navbar-toggler-icon"></span>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="triggerId">
-                            <button class="dropdown-item" href="#">Titles</button>
-                            <button class="dropdown-item" href="#">Actors</button>
-                            <button class="dropdown-item" href="#">Collections</button>
+                        <div class="dropdown-menu dropdown-menu-end " aria-labelledby="triggerId">
+                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'All' ">All</button>
+                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'Titles' ">Titles</button>
+                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'Actors'" >Actors</button>
+                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'Collections'">Collections</button>
                         </div>
                     </div>
 
