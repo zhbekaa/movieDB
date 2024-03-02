@@ -13,52 +13,21 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/movies", (req, res) => {
-  const search = req.query.search;
-  const sql = `
-  SELECT
-	movies.id,
-	movies.title,
-	movies.release_date,
-	movies.vote_average,
-	movies.popularity,
-	(SELECT actor_name FROM "cast" WHERE movie_id = movies.id AND actor_order = 0) AS actor_name1,
-	(SELECT actor_name FROM "cast" WHERE movie_id = movies.id AND actor_order = 1) AS actor_name2
-	FROM movies WHERE movies.id IN(
-		SELECT
-			movies.id FROM movies
-			WHERE
-				movies.title LIKE '%' || ? || '%'
-			ORDER BY
-				movies.popularity DESC
-			LIMIT 10)
-	ORDER BY popularity DESC;
-  
-  
-  `;
-  db.all(sql, [search], (err, rows) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(rows);
-    }
-  });
+
+
+
+// API endpoint
+require('./app/routes/movies.server.routes')(app);
+
+// Response for anything else
+app.use((req, res) => {
+    res.sendStatus(404);
 });
 
-// app.get("/movies", (req, res) => {
-//   const search = req.query.search;
-//   const sql = `SELECT movies.id, movies.title, movies.release_date, movies.vote_average, movies.popularity FROM movies WHERE movies.title LIKE '%' || ? || '%'
-//   ORDER BY movies.popularity DESC
-//   LIMIT 10
-//   `;
-//   db.all(sql, [search], (err, rows) => {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.send(rows);
-//     }
-//   });
-// });
+// Root endpoint
+app.get('/', (req, res, next) => {
+    res.json({'server_status': 'Running'});
+});
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
