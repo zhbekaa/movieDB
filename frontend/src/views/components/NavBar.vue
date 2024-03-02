@@ -2,7 +2,9 @@
 <script>
 import axios from "axios";
 // import { useQuery } from "vue-query";
+
 import MovieSearchCard from "./MovieSearchCard.vue";
+import SearchFilter from "./SearchFilter.vue";
 export default {
     data() {
         return {
@@ -13,6 +15,12 @@ export default {
             searchType: "All"
         }
     },
+    mounted() {
+        document.addEventListener("mousedown", this.handleClickOutside);
+    },
+    unmounted() {
+        document.removeEventListener("mousedown", this.handleClickOutside);
+    }, 
     methods: {
         async handleSubmit() {
             const input = this.input;
@@ -29,21 +37,31 @@ export default {
                         console.log(err)
                         return err;
                     });
-                
+
                 this.movies = response.data;
             } else {
                 this.showMovies = false
             }
         },
+
         handleInputDebounced() {
             clearTimeout(this.debounceTimer);
             this.debounceTimer = setTimeout(() => {
                 this.handleSubmit();
             }, 300);
         },
+
+        handleClickOutside(event) {
+            if (this.$refs.collapse && !this.$refs.collapse.contains(event.target)) {
+                // Clicked outside of the collapse area, close the collapse
+                // this.$refs.collapse.classList.remove("collapse");
+                this.$refs.collapse.classList.add("collapsing");
+            }
+        }
     },
     components: {
-        MovieSearchCard
+        MovieSearchCard,
+        SearchFilter
     }
 }
 </script>
@@ -61,23 +79,18 @@ export default {
                 <form class="input-group w-75">
                     <!-- @submit.prevent="handleSubmit"> -->
                     <input class="form-control" name="input" placeholder="Search other users..." aria-label="Search"
-                        v-model="input" @input="handleInputDebounced()" @focusin="showMovies = true" @focusout="showMovies = false">
-                    <div class="dropdown">
-                        <button class="input-group-text gap-2" type="button" id="triggerId" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            {{ searchType }}
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end " aria-labelledby="triggerId">
-                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'All' ">All</button>
-                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'Titles' ">Titles</button>
-                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'Actors'" >Actors</button>
-                            <button class="dropdown-item" href="#" type="button" @click="searchType = 'Collections'">Collections</button>
-                        </div>
-                    </div>
-
+                        v-model="input" @input="handleInputDebounced()" @focusin="showMovies = true"
+                        @focusout="showMovies = false">
+                    <button class="input-group-text gap-2" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
+                        {{ searchType }}
+                    </button> 
                 </form>
-                <div v-if="showMovies && input.trim()" class=" position-absolute top-100 overflow-auto w-75" style="height: 400px;">
+                <div class="collapse mt-4 position-absolute top-50 w-75" id="collapseFilter" ref="collapse">
+                   <SearchFilter />
+                </div>
+                <div v-if="showMovies && input.trim()" class=" position-absolute top-100 overflow-auto w-75"
+                    style="height: 400px;">
                     <div v-if="loading" class="card d-flex justify-content-center align-items-center p-4">
                         <span class="card-body spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     </div>
