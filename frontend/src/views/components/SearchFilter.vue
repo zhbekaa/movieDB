@@ -1,16 +1,25 @@
 <script>
+import { moviesService } from '@/services/movies.service';
+
 export default {
+    props: [
+        'searchType'
+    ],
     data() {
         return {
-            searchType: '',
             searchTypes: [
                 "Titles", "Collections", "Actors"
             ],
-            years: []
+            years: [],
+            genres: [],
+            rating: 0
         }
     },
-    mounted() {
+    async mounted() {
         this.years = this.getYears();
+
+
+        this.genres = await this.getGenres();
     },
     methods: {
         getYears() {
@@ -23,47 +32,59 @@ export default {
             }
 
             return years;
+        },
+        getGenres() {
+            const genres = moviesService.getGenres()
+                .then((res) => {
+                    return res;
+                })
+                .catch((err) => {
+                    throw err;
+                })
+            return genres;
         }
     }
 }
 </script>
 
 <template>
-    <div class="card card-body text-bg-dark btn-group">
-        <div class=" d-inline-flex justify-content-between px-5">
-            <button class="btn" v-for="(type, index) in searchTypes" :key="index" @click="() => searchType = type">
-                {{ type }}
-            </button>
+    <form class="container d-flex flex-column gap-3 mt-3 " v-if="searchType == 'Titles'">
+        <div class="d-flex gap-3 align-items-center">
+            Year
+            <select class="form-select w-25" aria-label="Default select example">
+                <option selected>date</option>
+                <option v-for="year in years" :key="year" :value="year">
+                    {{ year }}
+                </option>
+            </select> -
+            <select class="form-select w-25" aria-label="Default select example">
+                <option selected>date</option>
+                <option v-for="year in years" :key="year" :value="year">
+                    {{ year }}
+                </option>
+            </select>
         </div>
-        <form class="d-flex " v-if="searchType == 'Titles'">
-            <div class=" d-inline-flex justify-content-between align-items-center">
-                Year  
-                <select class="form-select"  aria-label="Default select example">
-                    <option selected>date</option>
-                    <option v-for="year in years" :key="year" :value="year">
-                        {{ year }}
-                    </option>
-                </select> -
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>date</option>
-                    <option v-for="year in years" :key="year" :value="year">
-                        {{ year }}
-                    </option>
-                </select>
-            </div>
-            <!-- <div class=" d-inline-flex justify-content-between align-items-center">
-                Genres: 
-                <select class="form-select"  aria-label="Default select example">
-                    <option selected>date</option>
-                    <option v-for="year in years" :key="year" :value="year">
-                        {{ year }}
-                    </option>
-                </select>
-            </div> -->
+
+        <div class="d-flex gap-3 align-items-center">
+            Genres
+            <select class="form-select w-25 " aria-label="Default select example" id="genres">
+                <option selected>Genres</option>
+                <option v-for="genre in genres" :key="genre.id" :value="genre">
+                    {{ genre.name }}
+                </option>
+            </select>
+        </div>
 
 
-        </form>
-    </div>
+
+        <div class="d-flex gap-2">
+            <label for="rating" class="form-label">Rating </label>
+            <input type="range" class="form-range w-50" min="0" max="10" step="0.5" id="rating" name="rating" @input="(event) => rating = event.target.value">
+            {{ rating }}★
+        </div>
+
+
+    </form>
 </template>
 
 <style></style>

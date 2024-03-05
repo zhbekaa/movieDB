@@ -18,14 +18,15 @@ export default {
 </script>
 
 <template>
-    <a class="card" :href="'/movies/' + id" 
+    <a class="card text-start w-100" :href="'/movies/' + id" 
         :class="{ 'bg-gradient': isHovered }"
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false">
         <div class="card-body">
-            <h4 class="mb-0">{{ title }}</h4>
+            <h4 class="mb-0">{{ title }}
+            </h4>
             <p class="mb-0">{{ release_date }}</p>
-            <p>{{ vote_average + " ★" }}</p>
+            <p>{{ vote_average }}★</p>
             <p>{{ actor1 + ", " + actor2 }}</p>
         </div>
     </a>
