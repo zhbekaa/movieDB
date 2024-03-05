@@ -1,0 +1,21 @@
+<script>
+export default {
+
+}
+</script>
+
+<template>
+    <div class="mb-3">
+        <label for="" class="form-label">Sized Input</label>
+        <input
+            type="text"
+            class="form-control form-control-sm"
+            name=""
+            id=""
+            aria-describedby="helpId"
+            placeholder=""
+        />
+        <small id="helpId" class="form-text text-muted">Help text</small>
+    </div>
+    
+</template>
