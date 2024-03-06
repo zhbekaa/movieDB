@@ -5,19 +5,16 @@ const sqlite3 = require("sqlite3");
 const cors = require("cors");
 
 app.use(cors());
+
 const DBSOURCE = "movie_data.db";
 
 let db = new sqlite3.Database(DBSOURCE);
-// Example route
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 
 
 
 
 // API endpoint
-require('./app/routes/movies.server.routes')(app);
+require('./app/routes/movie.server.routes')(app);
 
 // Response for anything else
 app.use((req, res) => {

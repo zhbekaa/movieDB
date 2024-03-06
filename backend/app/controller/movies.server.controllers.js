@@ -1,4 +1,4 @@
-const movies = require("../models/movies.server.models");
+const movies = require("../model/movie.server.models");
 
 
 const getMovies = (req, res) => {
@@ -16,7 +16,19 @@ const getMovies = (req, res) => {
 
 const getSingleMovie = (req, res) => {
 
-    return res.sendStatus(500)
+    movies.getSingleMovie(req.params.id, (err,movie) => {
+
+        if(movie){
+            return res.status(200).send(movie)
+        }
+        else if(err){
+            return res.sendStatus(404)
+        }
+        else {
+            return res.status(200).send(movie)
+        }
+
+    })
 
 }
 
