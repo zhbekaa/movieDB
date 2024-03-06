@@ -12,14 +12,19 @@ Currently /movies returns
         "actor_name2": "Tim Allen"
     },
 
-and api states
+Api specification States /movies should return 
 
-  {
-    "id": 58,
-    "title": "Pirates of the Caribbean: Dead Man's Chest",
-    "vote_avarage": 7,
-    "popularity": 29.455314
-  },
+    {
+        "id": 58,
+        "title": "Pirates of the Caribbean: Dead Man's Chest",
+        "vote_average": 7,
+        "popularity": 29.455314,
+    },
 
-Is the API Finalised / do you wish for me to Drop the "release_date" key ? 
+Is the API Finalised? aka, Do you wish for the "release_date" Key to be removed to meet the specification?
+
+
+
+
+
 
