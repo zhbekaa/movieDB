@@ -11,12 +11,17 @@ export default {
 </script>
 
 <template>
-  <div class="">
+  <div class="App">
     <NavBar />
     <router-view />
     <FooterComponent />
   </div>
 </template>
 
-<style scoped></style>
-../router
+<style scoped>
+.App {
+  height: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+</style>

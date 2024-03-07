@@ -284,7 +284,7 @@ export default {
 
 
 <template>
-    <div class="">
+    <div class="feed">
         <div class="best-rated text-black text-bg-dark p-4">
             <h4>Best Rated</h4>
             <div class="d-inline-flex gap-3 overflow-x-auto" style="max-width: 100%;">
@@ -308,6 +308,9 @@ export default {
 </template>
 
 <style>
+.feed {
+    margin-bottom: 20%;
+}
 .best-rated {
     background-color: #B3B3B3 !important;
 }

@@ -18,7 +18,8 @@ export default {
 </script>
 
 <template>
-    <a class="card text-start w-100" :href="'/movies/' + id" 
+    <a class="card text-start w-100"
+        :href="'/movies/' + id" 
         :class="{ 'bg-gradient': isHovered }"
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false">

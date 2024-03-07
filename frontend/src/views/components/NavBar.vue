@@ -54,6 +54,8 @@ export default {
                 // this.$refs.collapse.classList.remove("collapse");
                 this.$refs.collapse.classList.add("collapsing");
             }
+            if (this.$refs.search && !this.$refs.search.contains(event.target))
+                this.showMovies = false;
         }
     },
     components: {
@@ -78,8 +80,8 @@ export default {
 
                 <form class="input-group w-75">
                     <input class="form-control" name="input" :placeholder="`Search for ${searchType}`"
-                        aria-label="Search" v-model="input" @input="handleInputDebounced()" @focusin="showMovies = true"
-                        @focusout="showMovies = false">
+                        aria-label="Search" v-model="input" @input="handleInputDebounced()"
+                        @focusin="showMovies = true">
                     <button class="input-group-text gap-2" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
                         {{ searchType }}
@@ -98,7 +100,9 @@ export default {
                         <SearchFilter :searchType="searchType" />
                     </div>
                 </div>
-                <div v-if="showMovies && input.trim()" class="position-absolute top-100 overflow-auto w-75"
+
+                <!-- search -->
+                <div v-if="showMovies && input.trim()" class="position-absolute top-100 overflow-auto w-75" ref="search"
                     style="height: 400px; left: 10%;">
                     <div v-if="loading" class="card d-flex justify-content-center align-items-center p-4">
                         <span class="card-body spinner-border spinner-border-sm" role="status"
