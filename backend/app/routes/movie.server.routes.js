@@ -10,12 +10,16 @@ module.exports = function (app) {
     app.route('/movies')
         .get(movies.getMovies)
 
-    // Tested - Not to API spec. (Api spec is complicated and is taking time to find a suitable SQL query to meet the requirements)
+    // Minor Implementation - Not to API spec. (Api spec is complicated and is taking time to find a suitable SQL query to meet the requirements)
     app.route('/movies/:id')
         .get(movies.getSingleMovie)
 
-    // not complete
+    // not implemented
     app.route('/search')
         .get(movies.search) 
+
+    // Complete - Returns Genres To Api Spec 
+    app.route('/genres')
+        .get(movies.genres) 
 
 }

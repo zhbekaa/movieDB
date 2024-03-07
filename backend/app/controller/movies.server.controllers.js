@@ -35,6 +35,27 @@ const getSingleMovie = (req, res) => {
 const search = (req, res) => {
 
     return res.sendStatus(500)
+    /*
+    movies.search(req.query)
+    */
+
+}
+
+const genres = (req, res) => {
+
+    movies.genres((err,genres) => {
+
+        if(genres){
+            return res.status(200).send(genres)
+        }
+        else if(err){
+            return res.sendStatus(404)
+        }
+        else {
+            return res.sendStatus(500)
+        }
+
+    })
 
 }
 
@@ -42,5 +63,6 @@ const search = (req, res) => {
 module.exports = {
     getMovies: getMovies,
     getSingleMovie: getSingleMovie,
-    search:search
+    search:search,
+    genres:genres
 };

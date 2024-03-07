@@ -33,6 +33,10 @@ const getMovies = (query, done) => {
 const getSingleMovie = (id, done) => {
 
    //alot more needs to be added still.
+
+   /*More testing, but no luck getting a completed query.
+   Will resort to a different method on Saturday if i get enough time on the weekend.*/
+
   const sql =` 
   SELECT 
   movies.id,
@@ -72,11 +76,72 @@ const getSingleMovie = (id, done) => {
 
 }
 
-const search = (query, done) => {}
+const search = (query, done) => {
 
+  //https://localhost/search?type=&query=
+  // (Optional but will be added) type: type of the query (actor or movie or collection) shows all on default
+
+
+  //methods with promises will be used.
+
+
+  /* Mockup of expected Code
+  if(query.type = 1){
+    getActors(query.query, done => {
+
+    })
+    
+  }
+  else if(query.type = 2){
+    getMovies(query.query, done => {
+
+    })
+
+  }
+  else if(query.type = 3){
+    getCollections(query.query, done => {
+
+    })
+
+  }
+  else {
+    getActors(query.query, done => {})
+    getMovies(query.query, done => {})
+    getCollections(query.query, done => {})
+
+    results = {
+      movies: movies 
+      actors: actors
+      collections: collections
+    }
+    return done(results)
+  }
+ */
+
+
+}
+
+const genres = (done) => {
+
+  const sql = `SELECT id, name
+  FROM genres`
+
+  db.all(sql, [], (err, genres) =>{
+
+    if (err){
+      done(err);
+    }
+    else if (genres){
+      done(null,genres);
+    }
+
+
+  })
+}
 
 module.exports = {
   getMovies: getMovies,
   getSingleMovie: getSingleMovie,
-  search: search
+  search: search,
+  genres: genres
 }
