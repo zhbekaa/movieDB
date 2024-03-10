@@ -14,11 +14,11 @@ module.exports = function (app) {
     app.route('/movies/:id')
         .get(movies.getSingleMovie)
 
-    // not implemented
+    // Caution - Implemented to API spec (Uncertain if results are accurate)
     app.route('/search')
         .get(movies.search) 
 
-    // Complete - Returns Genres To Api Spec 
+    // Complete to Specification 
     app.route('/genres')
         .get(movies.genres) 
 

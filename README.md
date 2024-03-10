@@ -1,3 +1,5 @@
+Busy weekend. didnt get to achieve as much as i wanted
+
 Question regarding Api <3
 
 Currently /movies returns

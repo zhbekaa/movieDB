@@ -12,7 +12,7 @@ const getMovies = (req, res) => {
         }
     })
 
-}
+    }
 
 const getSingleMovie = (req, res) => {
 
@@ -25,7 +25,7 @@ const getSingleMovie = (req, res) => {
             return res.sendStatus(404)
         }
         else {
-            return res.status(200).send(movie)
+            return res.status(500).send("something went wrong")
         }
 
     })
@@ -34,10 +34,21 @@ const getSingleMovie = (req, res) => {
 
 const search = (req, res) => {
 
-    return res.sendStatus(500)
-    /*
-    movies.search(req.query)
-    */
+    console.log("ran#412")
+    movies.search(req.query, (err,results) => {
+
+        if(results){
+            return res.status(200).send(results)
+        }
+        else if(err){
+            return res.sendStatus(404)
+        }
+        else {
+            return res.status(500).send("yeah idk")
+        }
+
+    })
+
 
 }
 

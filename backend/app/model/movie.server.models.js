@@ -6,7 +6,12 @@ let db = new sqlite3.Database(DBSOURCE);;
 
 const getMovies = (query, done) => {
 
-    const sql = `
+      if(query==null){query = ""}//load something rarther then nothing.
+
+      //Need to add way to adjust limit. ?(later date)
+      //and way to implement page? (undefined currently.)
+
+      const sql = `
       SELECT movies.id, movies.title, movies.release_date, movies.vote_average, movies.popularity,
       (SELECT actor_name FROM "cast" WHERE movie_id = movies.id AND actor_order = 0) AS actor_name1,
       (SELECT actor_name FROM "cast" WHERE movie_id = movies.id AND actor_order = 1) AS actor_name2
@@ -15,19 +20,26 @@ const getMovies = (query, done) => {
         (SELECT movies.id FROM movies
         WHERE movies.title LIKE '%' || ? || '%'
         ORDER BY movies.popularity DESC
-        LIMIT 10)
+        LIMIT 20)
       ORDER BY popularity DESC;`
+
 
       db.all(sql, [query], (err, rows) => {
         if (err) {
-          console.log("err")
-          done(err);
-        } else {
-          console.log("done")
-          console.log(JSON.stringify(rows))
-          done(null, rows);
+          console.log("err:" +err)
+          return done(err)
+
+        } else if (rows){
+          return done(null, rows)
+
+        } else
+        {
+          console.log("unknown error")
+          return done(err)
         }
-      });
+
+      })
+
 }
 
 const getSingleMovie = (id, done) => {
@@ -76,50 +88,6 @@ const getSingleMovie = (id, done) => {
 
 }
 
-const search = (query, done) => {
-
-  //https://localhost/search?type=&query=
-  // (Optional but will be added) type: type of the query (actor or movie or collection) shows all on default
-
-
-  //methods with promises will be used.
-
-
-  /* Mockup of expected Code
-  if(query.type = 1){
-    getActors(query.query, done => {
-
-    })
-    
-  }
-  else if(query.type = 2){
-    getMovies(query.query, done => {
-
-    })
-
-  }
-  else if(query.type = 3){
-    getCollections(query.query, done => {
-
-    })
-
-  }
-  else {
-    getActors(query.query, done => {})
-    getMovies(query.query, done => {})
-    getCollections(query.query, done => {})
-
-    results = {
-      movies: movies 
-      actors: actors
-      collections: collections
-    }
-    return done(results)
-  }
- */
-
-
-}
 
 const genres = (done) => {
 
@@ -134,6 +102,122 @@ const genres = (done) => {
     else if (genres){
       done(null,genres);
     }
+
+
+  })
+}
+
+
+
+const search = async (query, done) => {
+  console.log("ran#414")
+  if(query.query == null){query.query = ""}//load something rarther then nothing.
+
+  //https://localhos:3000/search?query=star
+  // (Optional but will be added) type: type of the query (actor or movie or collection) shows all on default
+
+
+
+  console.log("type="+query.type)
+
+
+  //Crude code. will clean later
+  if(query.type == 1){
+    const movies = await searchMovies(query.query)
+    const results = ({movies: movies})
+    return done(null, results)
+  }
+  else if(query.type == 2){
+    const actors = await searchActors(query.query)
+    const results = ({actors: actors})
+    return done(null, results)
+  }
+  else if(query.type == 3){
+    const collections = await searchCollections(query.query)
+    const results = ({collections: collections})  
+    return done(null, results)
+  }
+  else {
+    const movies = await searchMovies(query.query)
+    const collections = await searchCollections(query.query)
+    const actors = await searchActors(query.query)
+
+    const results = ({
+      movies: movies, 
+      actors: actors,
+      collections: collections
+    })
+    return done(null, results)
+  }
+}
+
+
+
+
+
+const searchActors = (search) => {
+
+  return new Promise((resolve, reject) => {
+
+
+    //Not tested SQL fully.
+     const sql = `SELECT actor_id, actor_name,
+     (SELECT movies.title FROM "movies" WHERE movies.id = movie_id) AS top_movie
+     FROM cast WHERE actor_name LIKE '%' || ? || '%'
+     LIMIT 10`
+
+      db.all(sql, [search], (err, actors) => {
+          if (err) {
+              reject(err) 
+          } else {
+              resolve(actors)
+          }
+
+      })
+
+
+
+  })
+}
+
+const searchMovies = (search) => {
+
+  return new Promise((resolve, reject) => {
+
+      const sql = `SELECT id, title, vote_average, popularity FROM movies WHERE title LIKE '%' || ? || '%'
+      LIMIT 10`
+
+      db.all(sql, [search], (err, movies) => {
+          if (err) {
+              reject(err) 
+          } else {
+
+              resolve(movies)
+          }
+
+      })
+
+  })
+}
+
+const searchCollections = (search) => {
+  
+  return new Promise((resolve, reject) => {
+
+      const sql = `SELECT id, name
+      FROM collections WHERE name LIKE '%' || ? || '%'
+      LIMIT 10`
+
+      db.all(sql, [search], (err, collections) => {
+          if (err) {
+              reject(err) 
+          } else {
+     
+              resolve(collections)
+          }
+
+      })
+
 
 
   })
