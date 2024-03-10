@@ -90,38 +90,23 @@ const getSingleMovie = (id, done) => {
 
 
 const genres = (done) => {
-
-  const sql = `SELECT id, name
-  FROM genres`
-
-  db.all(sql, [], (err, genres) =>{
-
-    if (err){
-      done(err);
-    }
-    else if (genres){
-      done(null,genres);
-    }
-
-
-  })
+  const sql = `SELECT id, nameFROM genres`
+    db.all(sql, [], (err, genres) =>{
+      if (err){done(err)}
+      else if (genres){done(null,genres)}
+    })
 }
 
 
 
 const search = async (query, done) => {
-  console.log("ran#414")
   if(query.query == null){query.query = ""}//load something rarther then nothing.
 
   //https://localhos:3000/search?query=star
   // (Optional but will be added) type: type of the query (actor or movie or collection) shows all on default
 
 
-
-  console.log("type="+query.type)
-
-
-  //Crude code. will clean later
+  //Crude code. likely will clean after other apis are to spec
   if(query.type == 1){
     const movies = await searchMovies(query.query)
     const results = ({movies: movies})
@@ -191,7 +176,6 @@ const searchMovies = (search) => {
           if (err) {
               reject(err) 
           } else {
-
               resolve(movies)
           }
 

@@ -34,7 +34,6 @@ const getSingleMovie = (req, res) => {
 
 const search = (req, res) => {
 
-    console.log("ran#412")
     movies.search(req.query, (err,results) => {
 
         if(results){
