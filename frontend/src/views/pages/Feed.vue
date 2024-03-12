@@ -1,214 +1,14 @@
 <!-- eslint-disable vue/multi-word-component-names -->
+
 <script>
 import MovieCard from '../components/MovieCard.vue';
 import CollectionCard from '../components/CollectionCard.vue';
+import { moviesService } from '@/services/movies.service';
 export default {
     data() {
         return {
-            bestRated: [
-                {
-                    "id": 5731,
-                    "title": "Summer City",
-                    "rating": 10.0
-                },
-                {
-                    "id": 19993,
-                    "title": "George Lopez: America's Mexican",
-                    "rating": 10.0
-                },
-                {
-                    "id": 21317,
-                    "title": "Paramore: The Final Riot!",
-                    "rating": 10.0
-                },
-                {
-                    "id": 21466,
-                    "title": "Mera Naam Joker",
-                    "rating": 10.0
-                },
-                {
-                    "id": 27079,
-                    "title": "High Roller: The Stu Ungar Story",
-                    "rating": 10.0
-                },
-                {
-                    "id": 28469,
-                    "title": "Der Herr Karl",
-                    "rating": 10.0
-                },
-                {
-                    "id": 34662,
-                    "title": "Li'l Abner",
-                    "rating": 10.0
-                },
-                {
-                    "id": 37255,
-                    "title": "Ween: Live in Chicago",
-                    "rating": 10.0
-                },
-                {
-                    "id": 38971,
-                    "title": "Pavement: Slow Century",
-                    "rating": 10.0
-                },
-                {
-                    "id": 42173,
-                    "title": "Chilly Scenes of Winter",
-                    "rating": 10.0
-                },
-                {
-                    "id": 43034,
-                    "title": "Hell to Eternity",
-                    "rating": 10.0
-                },
-                {
-                    "id": 43147,
-                    "title": "Blessed Event",
-                    "rating": 10.0
-                },
-                {
-                    "id": 43823,
-                    "title": "Tom Brown's School Days",
-                    "rating": 10.0
-                },
-                {
-                    "id": 46016,
-                    "title": "Road to Redemption",
-                    "rating": 10.0
-                },
-                {
-                    "id": 47282,
-                    "title": "Little Dorrit",
-                    "rating": 10.0
-                },
-                {
-                    "id": 47683,
-                    "title": "Love at 16",
-                    "rating": 10.0
-                },
-                {
-                    "id": 49099,
-                    "title": "Images of a Relief",
-                    "rating": 10.0
-                },
-                {
-                    "id": 49477,
-                    "title": "Gendernauts: A Journey Through Shifting Identities",
-                    "rating": 10.0
-                },
-                {
-                    "id": 53315,
-                    "title": "The Kreutzer Sonata",
-                    "rating": 10.0
-                },
-                {
-                    "id": 53543,
-                    "title": "Claymation Comedy of Horrors",
-                    "rating": 10.0
-                }
-            ],
-            featured: [
-                {
-                    "id": 211672,
-                    "title": "Minions",
-                    "rating": 6.4
-                },
-                {
-                    "id": 297762,
-                    "title": "Wonder Woman",
-                    "rating": 7.2
-                },
-                {
-                    "id": 321612,
-                    "title": "Beauty and the Beast",
-                    "rating": 6.8
-                },
-                {
-                    "id": 339403,
-                    "title": "Baby Driver",
-                    "rating": 7.2
-                },
-                {
-                    "id": 177572,
-                    "title": "Big Hero 6",
-                    "rating": 7.8
-                },
-                {
-                    "id": 293660,
-                    "title": "Deadpool",
-                    "rating": 7.4
-                },
-                {
-                    "id": 283995,
-                    "title": "Guardians of the Galaxy Vol. 2",
-                    "rating": 7.6
-                },
-                {
-                    "id": 19995,
-                    "title": "Avatar",
-                    "rating": 7.2
-                },
-                {
-                    "id": 245891,
-                    "title": "John Wick",
-                    "rating": 7.0
-                },
-                {
-                    "id": 210577,
-                    "title": "Gone Girl",
-                    "rating": 7.9
-                },
-                {
-                    "id": 131631,
-                    "title": "The Hunger Games: Mockingjay - Part 1",
-                    "rating": 6.6
-                },
-                {
-                    "id": 281338,
-                    "title": "War for the Planet of the Apes",
-                    "rating": 6.7
-                },
-                {
-                    "id": 271110,
-                    "title": "Captain America: Civil War",
-                    "rating": 7.1
-                },
-                {
-                    "id": 680,
-                    "title": "Pulp Fiction",
-                    "rating": 8.3
-                },
-                {
-                    "id": 166426,
-                    "title": "Pirates of the Caribbean: Dead Men Tell No Tales",
-                    "rating": 6.6
-                },
-                {
-                    "id": 155,
-                    "title": "The Dark Knight",
-                    "rating": 8.3
-                },
-                {
-                    "id": 78,
-                    "title": "Blade Runner",
-                    "rating": 7.9
-                },
-                {
-                    "id": 24428,
-                    "title": "The Avengers",
-                    "rating": 7.4
-                },
-                {
-                    "id": 268531,
-                    "title": "Captain Underpants: The First Epic Movie",
-                    "rating": 6.5
-                },
-                {
-                    "id": 339988,
-                    "title": "The Circle",
-                    "rating": 5.4
-                }
-            ],
+            bestRated: [],
+            featured: [],
             collections: [
                 {
                     "id": 468552,
@@ -273,6 +73,27 @@ export default {
             ]
         }
     },
+    mounted() {
+        moviesService.getBestRatedMovies()
+            .then((res) => {
+                this.bestRated = res;
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+        moviesService.getFeaturedMovies()
+            .then((res) => {
+                this.featured = res;
+            }).catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
+    methods: {
+    },
+
     components: {
         MovieCard,
         CollectionCard
@@ -311,6 +132,7 @@ export default {
 .feed {
     margin-bottom: 20%;
 }
+
 .best-rated {
     background-color: #B3B3B3 !important;
 }

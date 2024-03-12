@@ -80,7 +80,7 @@ export default {
         <div class="d-flex gap-2">
             <label for="rating" class="form-label">Rating </label>
             <input type="range" class="form-range w-50" min="0" max="10" step="0.5" id="rating" name="rating" @input="(event) => rating = event.target.value">
-            {{ rating }}★
+            ★ {{ rating }}
         </div>
 
 
