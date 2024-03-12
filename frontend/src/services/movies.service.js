@@ -15,6 +15,29 @@ const getMovies = (input) => {
     })
 }
 
+const getFeaturedMovies = () => {
+  return axiosClient
+    .get(`movies/featured`)
+    .then((res) => {
+      return res.data
+    })
+    .catch((err) => {
+      throw err
+    })
+}
+
+
+const getBestRatedMovies = () => {
+  return axiosClient
+    .get(`movies/best-rated`)
+    .then((res) => {
+      return res.data
+    })
+    .catch((err) => {
+      throw err
+    })
+}
+
 const getGenres = () => {
   return axiosClient
     .get('genres')
@@ -27,5 +50,7 @@ const getGenres = () => {
 }
 export const moviesService = {
   getMovies,
-  getGenres
+  getGenres,
+  getFeaturedMovies,
+  getBestRatedMovies
 }

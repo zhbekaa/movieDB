@@ -49,11 +49,13 @@ export default {
         },
 
         handleClickOutside(event) {
-            if (this.$refs.collapse && !this.$refs.collapse.contains(event.target)) {
+            if (this.$refs.collapseFilter && !this.$refs.collapseFilter.contains(event.target)) {
                 // Clicked outside of the collapse area, close the collapse
                 // this.$refs.collapse.classList.remove("collapse");
-                this.$refs.collapse.classList.add("collapsing");
+                this.$refs.collapseFilter.classList.add("collapsing");
             }
+            if (this.$refs.search && !this.$refs.search.contains(event.target))
+                this.showMovies = false;
         }
     },
     components: {
@@ -72,21 +74,21 @@ export default {
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse justify-content-center position-relative w-100"
+            <div class="collapse navbar-collapse justify-content-center mt-3 mt-md-0 position-relative "
                 id="navbarSupportedContent">
-
-
-                <form class="input-group w-75">
-                    <input class="form-control" name="input" :placeholder="`Search for ${searchType}`"
-                        aria-label="Search" v-model="input" @input="handleInputDebounced()" @focusin="showMovies = true"
-                        @focusout="showMovies = false">
-                    <button class="input-group-text gap-2" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
-                        {{ searchType }}
-                    </button>
-                </form>
-                <div class="collapse  mt-4 position-absolute top-50 w-75" id="collapseFilter" ref="collapse"
-                    style="left: 10%;">
+                <div class="col-12 col-md-8">
+                    <form class="input-group">
+                        <input class=" form-control" name="input" :placeholder="`Search for ${searchType}`"
+                            aria-label="Search" v-model="input" @input="handleInputDebounced()"
+                            @focusin="showMovies = true">
+                        <button class="input-group-text gap-2" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
+                            {{ searchType }}
+                        </button>
+                    </form>
+                </div>
+                <div class="collapse  mt-4 position-absolute top-50 sm-w-100 w-75" id="collapseFilter"
+                    >
                     <div class="card card-body text-bg-dark btn-group">
                         <div class=" d-inline-flex justify-content-between px-5">
                             <button class="btn" v-for="(type, index) in searchTypes" :key="index"
@@ -98,7 +100,10 @@ export default {
                         <SearchFilter :searchType="searchType" />
                     </div>
                 </div>
-                <div v-if="showMovies && input.trim()" class="position-absolute top-100 overflow-auto w-75"
+
+                <!-- search -->
+                <div v-if="showMovies && input.trim()" class="position-absolute top-100 overflow-auto w-75" ref="search"
+                    id="search"
                     style="height: 400px; left: 10%;">
                     <div v-if="loading" class="card d-flex justify-content-center align-items-center p-4">
                         <span class="card-body spinner-border spinner-border-sm" role="status"
@@ -115,3 +120,26 @@ export default {
         </div>
     </nav>
 </template>
+
+<style>
+#collapseFilter {
+    left: 10%;
+    width: 75%;
+}
+
+#search {
+    left: 10%;
+    width: 75%;
+}
+
+@media screen and (max-width: 769px) {
+    #collapseFilter {
+        left: 0 !important;
+        width: 100% !important;
+    }
+    #search {
+        left: 0 !important;
+        width: 100% !important;
+    }
+}
+</style>
