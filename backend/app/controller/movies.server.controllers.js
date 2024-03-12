@@ -14,6 +14,19 @@ const getMovies = (req, res) => {
 
     }
 
+const getFeatured = (req, res) => {
+    movies.getFeatured((err, movies) => {
+        if (err) return res.sendStatus(404)
+        return res.status(200).send(movies)
+    }) 
+}
+
+const getBestRated = () => {
+    movies.getBestRated((err, movies) => {
+        if (err) return res.sendStatus(404)
+        return res.status(200).send(movies)
+    })
+}
 const getSingleMovie = (req, res) => {
 
     movies.getSingleMovie(req.params.id, (err,movie) => {
@@ -70,9 +83,12 @@ const genres = (req, res) => {
 }
 
 
+
 module.exports = {
     getMovies: getMovies,
     getSingleMovie: getSingleMovie,
-    search:search,
-    genres:genres
+    search: search,
+    genres: genres,
+    getFeatured: getFeatured,
+    getBestRated: getBestRated
 };

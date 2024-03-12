@@ -35,6 +35,48 @@ const getMovies = (query, done) => {
   });
 };
 
+const getFeatured = (done) => {
+  const sql = `
+  SELECT
+    title,
+    id,
+    vote_average,
+    poster_path
+  FROM
+    movies
+  ORDER BY
+    popularity DESC
+  LIMIT 20;
+  `;
+
+  db.all(sql, (err, rows) => {
+    if (err) return done(err);
+
+    return done(null, rows);
+  });
+};
+
+const getBestRated = (done) => {
+  const sql = `
+  SELECT
+    title,
+    id,
+    vote_average,
+    poster_path
+  FROM
+    movies
+  ORDER BY
+    vote_average DESC
+  LIMIT 20;
+  `;
+
+  db.all(sql, (err, rows) => {
+    if (err) return done(err);
+
+    return done(null, rows);
+  });
+};
+
 const getSingleMovie = (id, done) => {
   //alot more needs to be added still.
 
@@ -184,6 +226,8 @@ const searchCollections = (search) => {
 
 module.exports = {
   getMovies: getMovies,
+  getFeatured: getFeatured,
+  getBestRated: getBestRated,
   getSingleMovie: getSingleMovie,
   search: search,
   genres: genres,
