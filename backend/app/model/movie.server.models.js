@@ -120,7 +120,7 @@ const getSingleMovie = (id, done) => {
 };
 
 const genres = (done) => {
-  const sql = `SELECT id, nameFROM genres`;
+  const sql = `SELECT id, name FROM genres`;
   db.all(sql, [], (err, genres) => {
     if (err) {
       done(err);
