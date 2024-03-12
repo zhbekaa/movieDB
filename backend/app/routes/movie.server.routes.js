@@ -12,7 +12,7 @@ module.exports = function (app) {
     app.route('/movies/featured')
         .get(movies.getFeatured)    
     app.route('/movies/best-rated')
-        .get(movies.getFeatured)
+        .get(movies.getBestRated)
 
     // Minor Implementation - Not to API spec. (Api spec is complicated and is taking time to find a suitable SQL query to meet the requirements)
     app.route('/movies/:id')

@@ -65,6 +65,7 @@ const getBestRated = (done) => {
     poster_path
   FROM
     movies
+  WHERE vote_count > 200
   ORDER BY
     vote_average DESC
   LIMIT 20;

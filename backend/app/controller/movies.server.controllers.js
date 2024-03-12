@@ -21,7 +21,7 @@ const getFeatured = (req, res) => {
     }) 
 }
 
-const getBestRated = () => {
+const getBestRated = (req, res) => {
     movies.getBestRated((err, movies) => {
         if (err) return res.sendStatus(404)
         return res.status(200).send(movies)
