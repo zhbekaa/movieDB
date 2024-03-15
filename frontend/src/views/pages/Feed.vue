@@ -114,7 +114,7 @@ export default {
         </div>
         <div class="featured text-black text-bg-dark p-4">
             <h4>Featured</h4>
-
+            <input type="text">
             <div class="d-inline-flex gap-3 overflow-x-auto" style="max-width: 100%;">
                 <MovieCard v-for="movie in featured" :movie="movie" :key="movie.id" />
             </div>

@@ -2,11 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 
 
 import Feed from "../views/pages/Feed.vue"; 
-import MoviesList from "../views/pages/MoviesList.vue";
+import SearchResults from "@/views/pages/SearchResults.vue";
 
 const routes = [
   { path: "/", component: Feed },
-  { path: "/movies", component: MoviesList}
+  { path: "/search", component: SearchResults}
 ];
 
 const router = createRouter({
