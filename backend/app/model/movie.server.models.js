@@ -171,9 +171,10 @@ const searchActors = (search) => {
     //Not tested SQL fully.
 
     const sql = `SELECT
-        	c.actor_id,
-        	c.actor_name,
-        	m.title
+        	c.actor_id as id,
+        	c.actor_name as name,
+        	m.title as top_movie,
+          m.release_date as top_movie_date
         FROM
         	"cast" c,
         	movies m
@@ -182,7 +183,7 @@ const searchActors = (search) => {
         	AND c.actor_name LIKE '%' || ? || '%'
         	AND c.actor_order < 5
         GROUP BY c.actor_id
-        LIMIT 10;`;
+        LIMIT 5;`;
 
     db.all(sql, [search], (err, actors) => {
       if (err) {
