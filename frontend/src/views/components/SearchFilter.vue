@@ -6,10 +6,7 @@ export default {
         'searchType'
     ],
     data() {
-        return {
-            searchTypes: [
-                "Titles", "Collections", "Actors"
-            ],
+        return { 
             years: [],
             genres: [],
             rating: 0
@@ -48,7 +45,7 @@ export default {
 </script>
 
 <template>
-    <form class="container d-flex flex-column gap-3 mt-3 " v-if="searchType == 'Titles'">
+    <form class="container d-flex flex-column gap-3 mt-3 " v-if="searchType.name == 'Titles'">
         <div class="d-flex gap-3 align-items-center">
             Year
             <select class="form-select w-25" aria-label="Default select example">

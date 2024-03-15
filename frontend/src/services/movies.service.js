@@ -4,9 +4,9 @@ const axiosClient = axios.create({
   baseURL: 'http://localhost:3000' //localhost
 })
 
-const getMovies = (input) => {
+const getSearch = (input, type) => {
   return axiosClient
-    .get(`movies?search=${input}`, { timeout: 3000 })
+    .get(`search?query=${input}&type=${type.num}`, { timeout: 3000 })
     .then((res) => {
       return res.data
     })
@@ -49,7 +49,7 @@ const getGenres = () => {
     })
 }
 export const moviesService = {
-  getMovies,
+  getSearch,
   getGenres,
   getFeaturedMovies,
   getBestRatedMovies
