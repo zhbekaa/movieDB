@@ -16,7 +16,7 @@ export default {
 </script>
 
 <template>
-    <a class="card text-start w-100" :href="'/movies/' + id" :class="{ 'bg-gradient': isHovered }"
+    <a class="card text-start w-100 " :href="'/movies/' + id" :class="{ 'bg-gradient text-secondary': isHovered }"
         @mouseenter="isHovered = true" @mouseleave="isHovered = false">
         <div class="card-body">
             <h4 class=" card-title">{{ title }}

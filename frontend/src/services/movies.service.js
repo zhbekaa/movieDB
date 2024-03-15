@@ -6,7 +6,7 @@ const axiosClient = axios.create({
 
 const getSearch = (input, type) => {
   return axiosClient
-    .get(`search?query=${input}&type=${type.num}`, { timeout: 3000 })
+    .get(`search?query=${input}&type=${type}`, { timeout: 3000 })
     .then((res) => {
       return res.data
     })

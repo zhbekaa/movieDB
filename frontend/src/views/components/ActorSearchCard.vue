@@ -14,7 +14,7 @@ export default {
 <template>
     <a class="card text-start w-100"
         :href="'/actors/' + actor.id" 
-        :class="{ 'bg-gradient': isHovered }"
+        :class="{ 'bg-gradient text-secondary': isHovered }"
         @mouseenter="isHovered = true"
         @mouseleave="isHovered = false">
         <div class="card-body">
