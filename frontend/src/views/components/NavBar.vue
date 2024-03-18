@@ -46,18 +46,18 @@ export default {
         document.removeEventListener("mousedown", this.handleClickOutside);
     },
     methods: {
-        haandleSubmit() {
-            const input = this.input;
+        handleSubmit() {
+            const query = this.input;
             const searchType = this.searchType;
-            const url = `/search?q=${input}&type=${searchType}`
-            router.push(url)
+            const url = `/search?q=${query}&type=${searchType.num}`
+            router.push(url);
         },
         handleOnChange() {
             const input = this.input;
             if (input.trim()) {
                 this.showSearch = true;
                 this.loading = true;
-                moviesService.getSearch(input, this.searchType)
+                moviesService.getSearch(input, this.searchType.num)
                     .then((res) => {
                         this.loading = false;
                         this.movies = res.movies;
@@ -111,7 +111,7 @@ export default {
             <div class="collapse navbar-collapse justify-content-center mt-3 mt-md-0 position-relative "
                 id="navbarSupportedContent">
                 <div class="col-12 col-md-8">
-                    <form class="input-group" @submit="haandleSubmit">
+                    <form class="input-group" @submit.prevent="handleSubmit">
                         <input class="form-control" name="input" :placeholder="`Search for ${searchType.name}`"
                             aria-label="Search" v-model="input" @input="handleInputDebounced()"
                             @focusin="showSearch = true">
@@ -138,11 +138,8 @@ export default {
                 </div>
 
                 <!-- search -->
-                <div 
-                    v-if="showSearch && input.trim()" 
-                    class="position-absolute top-100 overflow-auto w-75" ref="search" id="search"
-                    style="height: 400px; left: 10%;"
-                    >
+                <div v-if="showSearch && input.trim()" class="position-absolute top-100 overflow-auto w-75" ref="search"
+                    id="search" style="height: 400px; left: 10%;">
                     <div v-if="loading" class="card d-flex justify-content-center align-items-center p-4">
                         <span class="card-body spinner-border spinner-border-sm" role="status"
                             aria-hidden="true"></span>
@@ -150,26 +147,18 @@ export default {
                     <div v-else-if="(collections?.length || movies?.length || actors?.length)">
 
                         <div v-if="(actors?.length) && (searchType.num == 0 || searchType.num == 2)">
-                            <ActorSearchCard 
-                                v-for="actor in actors"
-                                :actor="actor" 
-                                :key="actor.id" />
+                            <ActorSearchCard v-for="actor in actors" :actor="actor" :key="actor.id" />
                         </div>
 
-                        <div v-if="(movies?.length) &&  (searchType.num == 0 || searchType.num == 1)">
-                            <MovieSearchCard 
-                                v-for="movie in movies" 
-                                :key="movie.id" 
-                                :movie="movie" />
+                        <div v-if="(movies?.length) && (searchType.num == 0 || searchType.num == 1)">
+                            <MovieSearchCard v-for="movie in movies" :key="movie.id" :movie="movie" />
                         </div>
 
-                        <div v-if="(collections?.length) &&  (searchType.num == 0 || searchType.num == 3)">
-                            <CollectionSearchCard
-                                v-for="collection in collections" 
-                                :key="collection.id" 
+                        <div v-if="(collections?.length) && (searchType.num == 0 || searchType.num == 3)">
+                            <CollectionSearchCard v-for="collection in collections" :key="collection.id"
                                 :collection="collection" />
                         </div>
-                        
+
                     </div>
                     <div v-else class="card d-flex justify-content-center align-items-center p-4">
                         <span class="card-body" role="status" aria-hidden="true"> Nothing found </span>
