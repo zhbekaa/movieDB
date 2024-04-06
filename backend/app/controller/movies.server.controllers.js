@@ -28,8 +28,8 @@ const getBestRated = (req, res) => {
     })
 }
 const getSingleMovie = (req, res) => {
-
-    movies.getSingleMovie(req.params.id, (err,movie) => {
+    const movieId = req.params.id
+    movies.getSingleMovie(movieId, (err, movie) => {
 
         if(movie){
             return res.status(200).send(movie)
@@ -42,6 +42,13 @@ const getSingleMovie = (req, res) => {
         }
 
     })
+
+}
+
+const getSingleActor = async (req, res) => {
+    const actorId = req.params.id;
+    const actor = await movies.getSingleActor(actorId);
+    res.send(actor)
 
 }
 
@@ -90,5 +97,6 @@ module.exports = {
     search: search,
     genres: genres,
     getFeatured: getFeatured,
-    getBestRated: getBestRated
+    getBestRated: getBestRated,
+    getSingleActor: getSingleActor
 };

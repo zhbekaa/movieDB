@@ -26,7 +26,6 @@ const getFeaturedMovies = () => {
     })
 }
 
-
 const getBestRatedMovies = () => {
   return axiosClient
     .get(`movies/best-rated`)
@@ -48,9 +47,33 @@ const getGenres = () => {
       throw err
     })
 }
+
+const getSingleMovie = (id) => {
+  return axiosClient
+    .get(`movies/${id}`)
+    .then((res) => {
+      return res.data
+    })
+    .catch((err) => {
+      throw err
+    })
+}
+
+const getSignleActor = (id) => {
+  return axiosClient
+    .get(`actors/${id}`)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((err) => {
+      throw err;
+    })
+}
 export const moviesService = {
   getSearch,
   getGenres,
   getFeaturedMovies,
-  getBestRatedMovies
+  getBestRatedMovies,
+  getSingleMovie,
+  getSignleActor
 }

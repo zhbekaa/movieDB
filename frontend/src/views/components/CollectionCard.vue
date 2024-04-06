@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-    <a :href="`/collections/${collection.id}`" class=" text-center">
+    <a :href="`/collections/${collection.id}`" class="d-flex flex-column text-center" style="width: fit-content;">
         <img src="https://placeholder.co/325x180" :alt="collection.name">
         <span class="collection-name">
             {{ collection.name }}
