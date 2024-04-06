@@ -89,6 +89,7 @@ const getSingleMovie = (id, done) => {
   movies.id,
   movies.title,
   movies.runtime,
+  movies.poster_path,
   movies.release_date,
   movies.overview,
   movies.tagline,
@@ -98,27 +99,147 @@ const getSingleMovie = (id, done) => {
   movies.revenue,
   movies.vote_average,
   movies.vote_count,
-  movies.original_language 
+  movies.original_language,
+  COALESCE(movies.collection_id, '') AS collection_id,
+  COALESCE(collections.name, '') AS collection_name
   FROM 
-  movies
-  WHERE 
-  movies.id = ?`;
+    movies
+  LEFT JOIN 
+    collections ON movies.collection_id = collections.id
+  WHERE
+    movies.id = ?;`;
 
-  db.get(sql, [id], (err, row) => {
-    console.log(JSON.stringify(row));
+  db.get(sql, [id], async (err, movie) => {
     if (err) {
       console.log("err");
       console.log(err);
       done(err);
-    } else if (!row) {
+    } else if (!movie) {
       console.log("no row");
       done(err);
     } else {
       console.log("done");
-      done(null, row);
+      const [actors, crew, countries, genres] = await Promise.all([
+        getActors(id),
+        getCrew(id),
+        getCountries(id),
+        getGenres(id),
+      ]);
+
+      movie.actors = actors;
+      movie.crew = crew;
+      movie.countries = countries;
+      movie.genres = genres;
+      done(null, movie);
     }
   });
 };
+
+const getActors = (movieId) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT 
+    actor_id as id,
+    actor_name as name,
+    "character"
+    FROM cast 
+    WHERE movie_id = ?
+    ORDER BY actor_order;
+    `;
+
+    db.all(sql, [movieId], (err, actors) => {
+      if (err) {
+        reject(err);
+      } else if (actors) {
+        resolve(actors);
+      }
+    });
+  });
+};
+const getCrew = (movieId) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT 
+      member_id AS id,
+      member_name AS name,
+      job
+    FROM 
+      crew 
+    WHERE 
+      movie_id = ?
+    ORDER BY 
+      CASE 
+          WHEN job = 'Director' THEN 1
+          WHEN job = 'Producer' THEN 2
+          WHEN job = 'Writer' THEN 3
+          ELSE 4
+    END;
+    `;
+
+    db.all(sql, [movieId], (err, actors) => {
+      if (err) {
+        reject(err);
+      } else if (actors) {
+        resolve(actors);
+      }
+    });
+  });
+};
+
+const getCountries = (movieId) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT 
+      pc.name as name,
+      pc.iso_3166_1 as id
+    FROM 
+      production_countries as pc,
+      movie_production_countries as mpc
+    WHERE mpc.movie_id = ? and pc.iso_3166_1 = mpc.country_code;
+    `;
+
+    db.all(sql, [movieId], (err, actors) => {
+      if (err) {
+        reject(err);
+      } else if (actors) {
+        resolve(actors);
+      }
+    });
+  });
+};
+const getGenres = (movieId) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT 
+      g.id, g.name
+      FROM genres g, movie_genres mg
+      WHERE 
+      g.id = mg.genre_id 
+      AND
+      mg.movie_id = ?`;
+
+    db.all(sql, [movieId], (err, genres) => {
+      if (err) reject(err);
+      else if (genres) resolve(genres);
+    });
+  });
+};
+
+const getSignleActor = (actorId) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT
+      actor_id as id, 
+      actor_name as name
+    FROM 
+      cast;
+    `;
+    db.get(sql, [actorId], (err, actor) => {
+      if (err) reject(err)
+      else if (actor) resolve(actor)
+    })
+  })
+}
 
 const genres = (done) => {
   const sql = `SELECT id, name FROM genres`;
@@ -165,7 +286,6 @@ const search = async (query, done) => {
     return done(null, results);
   }
 };
-
 const searchActors = (search) => {
   return new Promise((resolve, reject) => {
     //Not tested SQL fully.
@@ -197,8 +317,11 @@ const searchActors = (search) => {
 
 const searchMovies = (search) => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT id, title, vote_average, popularity FROM movies WHERE title LIKE '%' || ? || '%'
-      LIMIT 10`;
+    const sql = `
+    SELECT id, title, release_date, vote_average, popularity 
+    FROM movies
+    WHERE title LIKE '%' || ? || '%'
+    LIMIT 10`;
 
     db.all(sql, [search], (err, movies) => {
       if (err) {
@@ -231,6 +354,7 @@ module.exports = {
   getFeatured: getFeatured,
   getBestRated: getBestRated,
   getSingleMovie: getSingleMovie,
+  getSignleActor: getSignleActor,
   search: search,
   genres: genres,
 };
