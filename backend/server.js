@@ -15,6 +15,7 @@ let db = new sqlite3.Database(DBSOURCE);
 
 // API endpoint
 require('./app/routes/movie.server.routes')(app);
+require('./app/routes/actor.server.routes')(app);
 
 // Response for anything else
 app.use((req, res) => {
