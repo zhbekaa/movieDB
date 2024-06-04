@@ -225,21 +225,6 @@ const getGenres = (movieId) => {
   });
 };
 
-const getSignleActor = (actorId) => {
-  return new Promise((resolve, reject) => {
-    const sql = `
-    SELECT
-      actor_id as id, 
-      actor_name as name
-    FROM 
-      cast;
-    `;
-    db.get(sql, [actorId], (err, actor) => {
-      if (err) reject(err)
-      else if (actor) resolve(actor)
-    })
-  })
-}
 
 const genres = (done) => {
   const sql = `SELECT id, name FROM genres`;
@@ -255,14 +240,15 @@ const genres = (done) => {
 const search = async (query, done) => {
   if (query.query == null) {
     query.query = "";
-  } //load something rarther then nothing.
+  }
 
-  //https://localhos:3000/search?query=star
-  // (Optional but will be added) type: type of the query (actor or movie or collection) shows all on default
-
-  //Crude code. likely will clean after other apis are to spec
   if (query.type == 1) {
-    const movies = await searchMovies(query.query);
+    let movies = [];
+    if (query.query) {
+      movies = await smallSearch(query.query);
+    } else {
+      movies = await searchMovies(query);
+    }
     const results = { movies: movies };
     return done(null, results);
   } else if (query.type == 2) {
@@ -288,8 +274,6 @@ const search = async (query, done) => {
 };
 const searchActors = (search) => {
   return new Promise((resolve, reject) => {
-    //Not tested SQL fully.
-
     const sql = `SELECT
         	c.actor_id as id,
         	c.actor_name as name,
@@ -314,16 +298,52 @@ const searchActors = (search) => {
     });
   });
 };
-
+const smallSearch = (search) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT id, title, release_date, vote_average, popularity
+    FROM movies 
+    WHERE title LIKE '%' || ? || '%'
+    LIMIT 10
+    `;
+    db.all(sql, [search], (err, movies) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(movies);
+      }
+    });
+  });
+};
 const searchMovies = (search) => {
   return new Promise((resolve, reject) => {
     const sql = `
-    SELECT id, title, release_date, vote_average, popularity 
-    FROM movies
-    WHERE title LIKE '%' || ? || '%'
-    LIMIT 10`;
-
-    db.all(sql, [search], (err, movies) => {
+    SELECT 
+    m.id, 
+    m.title, 
+    m.release_date, 
+    m.vote_average, 
+    m.popularity 
+    FROM 
+        movies m
+    JOIN 
+        movie_genres mg ON m.id = mg.movie_id
+    JOIN 
+        genres g ON mg.genre_id = g.id
+    WHERE 
+        m.title LIKE '%' || ? || '%' 
+        AND strftime('%Y', m.release_date) BETWEEN ? AND ?
+        AND m.vote_average = ?
+        AND g.name = ?
+    LIMIT 10;`;
+    params = [
+      search.query,
+      search.start_year,
+      search.end_year,
+      search.rating,
+      search.genre,
+    ];
+    db.all(sql, params, (err, movies) => {
       if (err) {
         reject(err);
       } else {
@@ -354,7 +374,6 @@ module.exports = {
   getFeatured: getFeatured,
   getBestRated: getBestRated,
   getSingleMovie: getSingleMovie,
-  getSignleActor: getSignleActor,
   search: search,
   genres: genres,
 };

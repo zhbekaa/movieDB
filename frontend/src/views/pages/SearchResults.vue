@@ -3,6 +3,7 @@ import ActorSearchCard from '../components/ActorSearchCard.vue';
 import MovieSearchCard from '../components/MovieSearchCard.vue';
 import CollectionSearchCard from '../components/CollectionSearchCard.vue';
 import { moviesService } from '@/services/movies.service';
+import { handleSearchQuery } from '../../functions/handleSearchQuery'
 export default {
     data() {
         return {
@@ -13,14 +14,17 @@ export default {
             collections: []
         }
     },
-    mounted() {
-        this.query = this.$route.query.q;
-        this.type = this.$route.query.type;
-        this.getSearchResults();
+    beforeRouteUpdate() {
+        this.getSearchResults()
     },
+    mounted() {
+        this.getSearchResults()
+    },
+
     methods: {
         getSearchResults() {
-            moviesService.getSearch(this.query, this.type)
+            const params = handleSearchQuery(this)
+            moviesService.getSearch(params)
                 .then((res) => {
                     this.movies = res.movies;
                     this.actors = res.actors;

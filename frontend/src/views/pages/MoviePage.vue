@@ -2,7 +2,7 @@
 import { moviesService } from '@/services/movies.service';
 import ActorsList from "@/views/components/ActorsList.vue"
 import CrewList from "@/views/components/CrewList.vue"
-import CollectionCard from '../components/CollectionCard.vue';
+import CollectionCard from '@/views/components/CollectionCard.vue';
 
 export default {
     data() {

@@ -18,9 +18,6 @@ module.exports = function (app) {
     app.route('/movies/:id')
         .get(movies.getSingleMovie)
 
-    app.route('/actors/:id')
-        .get(movies.getSingleActor)
-
     // Caution - Implemented to API spec (Uncertain if results are accurate)
     app.route('/search')
         .get(movies.search) 

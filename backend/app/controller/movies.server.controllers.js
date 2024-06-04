@@ -45,12 +45,6 @@ const getSingleMovie = (req, res) => {
 
 }
 
-const getSingleActor = async (req, res) => {
-    const actorId = req.params.id;
-    const actor = await movies.getSingleActor(actorId);
-    res.send(actor)
-
-}
 
 const search = (req, res) => {
 
@@ -98,5 +92,4 @@ module.exports = {
     genres: genres,
     getFeatured: getFeatured,
     getBestRated: getBestRated,
-    getSingleActor: getSingleActor
 };

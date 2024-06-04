@@ -49,15 +49,22 @@ export default {
         handleSubmit() {
             const query = this.input;
             const searchType = this.searchType;
-            const url = `/search?q=${query}&type=${searchType.num}`
-            router.push(url);
+            const route = {
+                path: '/search',
+                query: {
+                    query: query,
+                    type: searchType.num
+                }
+            }
+            
+            router.push(route);
         },
         handleOnChange() {
             const input = this.input;
             if (input.trim()) {
                 this.showSearch = true;
                 this.loading = true;
-                moviesService.getSearch(input, this.searchType.num)
+                moviesService.getSearch({query: input, type: this.searchType.num})
                     .then((res) => {
                         this.loading = false;
                         this.movies = res.movies;
