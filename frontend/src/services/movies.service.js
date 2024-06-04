@@ -4,9 +4,10 @@ const axiosClient = axios.create({
   baseURL: 'http://localhost:3000' //localhost
 })
 
-const getSearch = (input, type) => {
+const getSearch = (params) => {
+  console.log(params)
   return axiosClient
-    .get(`search?query=${input}&type=${type}`, { timeout: 3000 })
+    .get(`search`, { params: params, timeout: 3000 })
     .then((res) => {
       return res.data
     })
@@ -59,21 +60,10 @@ const getSingleMovie = (id) => {
     })
 }
 
-const getSignleActor = (id) => {
-  return axiosClient
-    .get(`actors/${id}`)
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      throw err;
-    })
-}
 export const moviesService = {
   getSearch,
   getGenres,
   getFeaturedMovies,
   getBestRatedMovies,
   getSingleMovie,
-  getSignleActor
 }
